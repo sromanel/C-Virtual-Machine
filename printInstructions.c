@@ -11,11 +11,23 @@ int printInstructions(const char *input){
     in = fopen(input, "r");
 
     if(in){
+
+        /*
+         * Il seguente segmtno di codice mi permette di saltare tutte
+         * le linee che non contengono un numero.
+         */
         first_read = fgetc(in);
-        while ((first_read < 48) && (first_read > 57)){
+        while ((first_read < 48) || (first_read > 57)){
+            printf("ho appena letto %c\n", (char)first_read);
             first_read = fgetc(in);
         }
         printf("ho trovato il primo numero ed è %d\n", first_read);
+
+        //Problema: se il numero di linee è di due o più cifre, come lo vedo come int?
+
+        while(getline(&line_buf_in, &line_in_buf_size, in)){
+
+        }
 
     } else {
         printf("Errore nell'apertura del file\n");
