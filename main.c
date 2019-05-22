@@ -2,6 +2,10 @@
 #include <unistd.h>
 #include "CVM.h"
 
+/*
+ * Come passare nome file?
+ */
+
 /*int main() {
 
     int ciao = 0;
