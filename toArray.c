@@ -7,24 +7,20 @@
 #include <stdlib.h>
 #include "CVM.h"
 
-int findSize(FILE *in){
-    char *textLine = NULL, *tempLine;
+int getSize(FILE *in){
+    char *textLine = NULL, *line_buf = NULL;
     size_t line_in_buf_size = 0;
-    int number;
+    int number = 0, found = 0;
 
-    printf("ciao\n");
-    if(in){
-        printf("il file è aperto\n");
-    }
-
-    while (getline(&tempLine, &line_in_buf_size, in) >= 0){
-        printf("sto analizzando %s\n", tempLine);
-        textLine = strtok(tempLine, ";");
+    while (getline(&line_buf, &line_in_buf_size, in) >= 0 && found == 0){
+        textLine = strtok(line_buf, ";");
         if ((*textLine >= '0') && (*textLine <= '9')) {
             number = atoi(textLine);
-            return number;
+            found = 1;
         }
     }
+
+    return number;
 }
 
 void fillArray(FILE *in, int* instructionArray){
@@ -37,15 +33,12 @@ void fillArray(FILE *in, int* instructionArray){
         if ((*textLine >= '0') && (*textLine <= '9')) {
             number = atoi(textLine);
             if(first_read == 0){
-                instructionArray = (int*)malloc(sizeof(int) * number);
-                printf("ho appena letto il numero di righe, l'array sarà lungo %d\n", number);
                 first_read = 1;
             }   else {
                 instructionArray[i] = number;
                 printf("[%d]: %d\n", i, instructionArray[i]);
                 i++;
             }
-            printf("%d\n", number);
         }
     }
 

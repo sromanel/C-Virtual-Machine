@@ -7,6 +7,6 @@
 
 int Stampa(const char *input);
 void fillArray(FILE *in, int *instructionArray);
-int findSize(FILE *in);
+int getSize(FILE *in);
 
 #endif //C_VIRTUAL_MACHINE_CVM_H
