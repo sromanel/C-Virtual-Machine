@@ -2,7 +2,7 @@
 #include <string.h>
 #include "CVM.h"
 
-int printInstructions(const char *input){
+int Stampa(const char *input){
     int n_lines, first_read;
     FILE *in;
     char *line_buf_in = NULL, *ciao, temp_char[60];

@@ -10,6 +10,6 @@ int main() {
 
     int ciao = 0;
     printf("Hello World!\n");
-    ciao = printInstructions("factorial.txt");
+    ciao = Stampa("factorial.txt");
     return 0;
 }
