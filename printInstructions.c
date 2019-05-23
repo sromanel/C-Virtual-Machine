@@ -3,9 +3,9 @@
 #include "CVM.h"
 
 int printInstructions(const char *input){
-    int n_lines, first_read;
+    int n_lines, first_read, size = 0;
     FILE *in;
-    char* line_buf_in;
+    char* line_buf_in = NULL, ciao, temp_char;
     size_t line_in_buf_size = 0;
 
     in = fopen(input, "r");
@@ -13,15 +13,13 @@ int printInstructions(const char *input){
     if(in){
 
         /*
-         * Il seguente segmtno di codice mi permette di saltare tutte
+         * Il seguente segmento di codice mi permette di saltare tutte
          * le linee che non contengono un numero.
          */
-        first_read = fgetc(in);
-        while ((first_read < 48) || (first_read > 57)){
-            printf("ho appena letto %c\n", (char)first_read);
-            first_read = fgetc(in);
+        temp_char = *fgets(&temp_char, strlen(&temp_char), in);
+        while ((temp_char < 47) || (temp_char > 57)){
+            printf("%s", &temp_char);
         }
-        printf("ho trovato il primo numero ed è %d\n", first_read);
 
         //Problema: se il numero di linee è di due o più cifre, come lo vedo come int?
 
