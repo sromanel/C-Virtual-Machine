@@ -39,24 +39,14 @@ int main() {
             fillArray(in, instruction_array);
 
             for(i = 0; i < arraySize; i++){
-                printf("[%d]: %d\n", i, instruction_array[i]);
+                printf("[%3d]: %d\n", i, instruction_array[i]);
             }
         }   else {
             printf("Errore nell'apertura del file.\n");
         }
+
+        fclose(in);
     }
-
-    /*int size = 0;
-    FILE *in;
-    char filename[128] = "";
-
-    printf("Enter the name of the file.\n");
-    scanf("%s", filename);
-
-    in = fopen(filename, "r");
-
-    size = findSize(in);
-    printf("size: %d\n", size);*/
 
     return 0;
 }

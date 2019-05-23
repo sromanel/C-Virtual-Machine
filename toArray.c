@@ -24,12 +24,12 @@ int getSize(FILE *in){
 }
 
 void fillArray(FILE *in, int* instructionArray){
-    char *textLine = NULL, *tempLine;
+    char *textLine = NULL, *line_buf = NULL;
     size_t line_in_buf_size = 0;
-    int number, first_read = 0, i = 0;
+    int number = 0, first_read = 0, i = 0;
 
-    while (getline(&tempLine, &line_in_buf_size, in) >= 0){
-        textLine = strtok(tempLine, ";");
+    while (getline(&line_buf, &line_in_buf_size, in) >= 0){
+        textLine = strtok(line_buf, ";");
         if ((*textLine >= '0') && (*textLine <= '9')) {
             number = atoi(textLine);
             if(first_read == 0){
@@ -40,7 +40,5 @@ void fillArray(FILE *in, int* instructionArray){
             }
         }
     }
-
-
 }
 
