@@ -37,6 +37,10 @@ int main() {
             rewind(in);
             instruction_array = (int*)malloc(sizeof(int) * arraySize);
             fillArray(in, instruction_array);
+
+            for(i = 0; i < arraySize; i++){
+                printf("[%d]: %d\n", i, instruction_array[i]);
+            }
         }   else {
             printf("Errore nell'apertura del file.\n");
         }

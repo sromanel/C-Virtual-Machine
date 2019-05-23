@@ -36,7 +36,6 @@ void fillArray(FILE *in, int* instructionArray){
                 first_read = 1;
             }   else {
                 instructionArray[i] = number;
-                printf("[%d]: %d\n", i, instructionArray[i]);
                 i++;
             }
         }
