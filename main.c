@@ -1,7 +1,3 @@
-//
-// Created by Simone Romanello on 22/05/2019.
-//
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,7 +6,7 @@
 int main() {
 
     FILE *in;
-    int operazione = 0, *instruction_array = NULL, i, arraySize = 0;
+    int operazione = 0, *instruction_array = NULL, arraySize = 0;
     char instruction[7], filename[128] = " ";
 
     printf("Scegliere l'operazione:\n1)stampa\n2)esegui\n");
