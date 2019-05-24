@@ -22,7 +22,8 @@ int print_stack(int stack[], unsigned int sp, unsigned int n){
 }
 
 int push(int record[], unsigned int *sp, int reg_number, int stack[]){
-    int success = 0, temp = 0;
+    int success = 0;
+    unsigned int temp = 0;
     temp = *sp;
     if(temp < sizeof(stack)/sizeof(int)){
         stack[temp] = record[reg_number];
@@ -61,7 +62,7 @@ unsigned int jmp(unsigned int ip, int new_position){
 int jz(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
     int success = 0;
     int temp = *sp;
-    if(sp > 0){
+    if(temp > 0){
         if(stack[temp - 1] == 0){
             *ip = newPosition;
             *sp -= 1;
@@ -76,7 +77,7 @@ int jz(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
 int jpos(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
     int success = 0;
     int temp = *sp;
-    if(sp > 0){
+    if(temp > 0){
         if(stack[temp-1] > 0){
             *ip = newPosition;
             *sp -= 1;
@@ -92,7 +93,7 @@ int jpos(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
 int jneg(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
     int success = 0;
     int temp = *sp;
-    if(sp > 0){
+    if(temp > 0){
         if(stack[temp-1] < 0){
             *ip = newPosition;
             *sp -= 1;
