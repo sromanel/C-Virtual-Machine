@@ -5,17 +5,15 @@
 void esegui (char *filename){
 
     FILE *in;
-    int *instruction_array = NULL, arraySize = 0, stack[16384] = {0}, record[32] = {0}, *sp = NULL, *ip = NULL;
+    int *instruction_array = NULL, stack[16384] = {0}, record[32] = {0};
+    unsigned int sp = 0, ip = 0, array_size = 0;
 
     in = fopen(filename, "r");
     if(in){
-        arraySize = getSize(in);
+        array_size = getSize(in);
         rewind(in);
-        instruction_array = (int*)malloc(sizeof(int) * arraySize);
+        instruction_array = (int*)malloc(sizeof(int) * array_size);
         fillArray(in, instruction_array);
-        ip = instruction_array;
-        sp = ip;
-        exe
     }   else {
         perror("Errore: ");
     }

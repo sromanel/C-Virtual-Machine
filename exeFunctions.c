@@ -6,73 +6,108 @@ void display(int record[], int reg_number){
     printf("R%d = %d", reg_number, record[reg_number]);
 }
 
+int push(int record[], unsigned int sp, int reg_number, int stack[]){
+    int success = 0;
+    if(sp < sizeof(stack)/sizeof(int)){
+        stack[sp] = record[reg_number];
+        sp += 1;
+        success = 1;
+    }   else {
+        perror("Errore: ");
+    }
+
+    return success;
+}
+
+void pop(int record[], unsigned int sp, int reg_number, int stack[]){
+
+}
+
 void mov(int record[], int reg_number, int value){
     record[reg_number] = value;
 }
 
-void jmp(int *ip, int new_position){
-
+unsigned int jmp(unsigned int ip, int new_position){
+    ip = new_position;
+    return ip;
 }
 
-void add(int record[], int reg1, int reg2, int *sp, int stack[]){
+int jz(unsigned int ip[], unsigned int *sp, int stack[], int newPosition){
+    int success = 0;
+    int temp = *sp;
+    if(sp > 0){
+        if(stack[temp - 1] == 0){
+            *ip = newPosition;
+            *sp -= 1;
+            success = 1;
+        }
+    }   else {
+        perror("Error: ");
+    }
+    return success;
+}
+
+void add(int record[], int reg1, int reg2, unsigned int sp, int stack[]){
     int result = 0;
     result = record[reg1] + record[reg2];
 
-
 }
 
-void execute(int array_size, int *ip, int stack[], int record[], int *sp){
-    int i = 0;
+void execute(int instruction_array[], unsigned int array_size, unsigned int ip, int stack[], int record[], unsigned int sp){
 
-    while(*ip != HALT && i < array_size){
-        switch (ip[i]){
+    while(instruction_array[ip] != HALT && ip < array_size){
+        switch (instruction_array[ip]){
             case DISPLAY:
-                display(record, ip[i + 1]);
-                i += 2;
+                display(record, instruction_array[ip + 1]);
+                ip += 2;
                 break;
             case PRINT_STACK:
-                i += 2;
+                ip += 2;
                 break;
             case PUSH:
-                i += 2;
+                if(!push(record, sp,instruction_array[ip+1], stack))
+                {
+                    ip += 2;
+                }
                 break;
             case POP:
-                i += 2;
+                ip += 2;
                 break;
             case MOV:
-                mov(record, ip[i+1], ip[i+1]);
-                i += 3;
+                mov(record, instruction_array[ip+1], instruction_array[ip+2]);
+                ip += 3;
                 break;
             case CALL:
-                i += 2;
+                ip += 2;
                 break;
             case RET:
-                i += 1;
+                ip += 1;
                 break;
             case JMP:
-
-                i += 2;
+                ip = jmp(ip, instruction_array[ip + 1]);
                 break;
             case JZ:
-                i += 2;
+                if(!jz(&ip, &sp, stack, instruction_array[ip+1])){
+                    ip += 2;
+                }
                 break;
             case JPOS:
-                i += 2;
+                ip += 2;
                 break;
             case JNEG:
-                i += 2;
+                ip += 2;
                 break;
             case ADD:
-                i += 3;
+                ip += 3;
                 break;
             case SUB:
-                i += 3;
+                ip += 3;
                 break;
             case MUL:
-                i += 3;
+                ip += 3;
                 break;
             case DIV:
-                i += 3;
+                ip += 3;
                 break;
         }
     }

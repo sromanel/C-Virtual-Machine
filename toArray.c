@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include "CVM.h"
 
-int getSize(FILE *in){
+unsigned int getSize(FILE *in){
     char *textLine = NULL, *line_buf = NULL;
     size_t line_in_buf_size = 0;
-    int number = 0, found = 0;
+    unsigned int number = 0, found = 0;
 
     while (getline(&line_buf, &line_in_buf_size, in) >= 0 && found == 0){
         textLine = strtok(line_buf, ";");

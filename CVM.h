@@ -20,8 +20,8 @@
 
 void Stampa(int instruction_array[], int length);
 void fillArray(FILE *in, int *instructionArray);
-int getSize(FILE *in);
-void execute (int array_size, int *ip, int stack[], int record[], int *sp);
+unsigned int getSize(FILE *in);
+void execute (int instruction_array[], unsigned int array_size, unsigned int ip, int stack[], int record[], unsigned int sp);
 
 
 #endif
