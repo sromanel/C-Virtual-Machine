@@ -33,14 +33,9 @@ int main() {
 
         if(in){
             arraySize = getSize(in);
-            /*printf("Size: %d.\n", arraySize);*/
             rewind(in);
             instruction_array = (int*)malloc(sizeof(int) * arraySize);
             fillArray(in, instruction_array);
-
-            /*for(i = 0; i < arraySize; i++){
-                printf("[%3d]: %d\n", i, instruction_array[i]);
-            }*/
 
             Stampa(instruction_array, arraySize);
         }   else {
