@@ -6,67 +6,67 @@ void Stampa(int instruction_array[], int length){
 
     while(i < length){
         switch(instruction_array[i]){
-            case 0:
+            case HALT:
                 printf("[%3d] HALT\n", i);
                 i += 1;
                 break;
-            case 1:
+            case DISPLAY:
                 printf("[%3d] DISPLAY R%d\n", i, instruction_array[i+1]);
                 i += 2;
                 break;
-            case 2:
+            case PRINT_STACK:
                 printf("[%3d] PRINT_STACK %d\n", i, instruction_array[i+1]);
                 i += 2;
                 break;
-            case 10:
+            case PUSH:
                 printf("[%3d] PUSH R%d\n", i, instruction_array[i+1]);
                 i += 2;
                 break;
-            case 11:
+            case POP:
                 printf("[%3d] POP R%d\n", i, instruction_array[i+1]);
                 i += 2;
                 break;
-            case 12:
+            case MOV:
                 printf("[%3d] MOV R%d %d\n", i, instruction_array[i+1], instruction_array[i+2]);
                 i += 3;
                 break;
-            case 20:
+            case CALL:
                 printf("[%3d] CALL %d\n", i, instruction_array[i+1]);
                 i += 2;
                 break;
-            case 21:
+            case RET:
                 printf("[%3d] RET\n", i);
                 i += 1;
                 break;
-            case 22:
+            case JMP:
                 printf("[%3d] JMP %d\n", i, instruction_array[i+1]);
                 i += 2;
                 break;
-            case 23:
+            case JZ:
                 printf("[%3d] JZ %d\n", i, instruction_array[i+1]);
                 i += 2;
                 break;
-            case 24:
+            case JPOS:
                 printf("[%3d] JPOS %d\n", i, instruction_array[i+1]);
                 i += 2;
                 break;
-            case 25:
+            case JNEG:
                 printf("[%3d] JNEG %d\n", i, instruction_array[i+1]);
                 i += 2;
                 break;
-            case 30:
+            case ADD:
                 printf("[%3d] ADD R%d R%d\n", i, instruction_array[i+1], instruction_array[i+2]);
                 i += 3;
                 break;
-            case 31:
+            case SUB:
                 printf("[%3d] SUB R%d R%d\n", i, instruction_array[i+1], instruction_array[i+2]);
                 i += 3;
                 break;
-            case 32:
+            case MUL:
                 printf("[%3d] MUL R%d R%d\n", i, instruction_array[i+1], instruction_array[i+2]);
                 i += 3;
                 break;
-            case 33:
+            case DIV:
                 printf("[%3d] DIV R%d R%d\n", i, instruction_array[i+1], instruction_array[i+2]);
                 i += 3;
                 break;

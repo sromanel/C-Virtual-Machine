@@ -15,6 +15,7 @@ void esegui (char *filename){
         fillArray(in, instruction_array);
         ip = instruction_array;
         sp = ip;
+        exe
     }   else {
         perror("Errore: ");
     }
