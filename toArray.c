@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cert-err34-c"
 //
 // Created by rommy on 23/05/2019.
 //
@@ -41,4 +43,3 @@ void fillArray(FILE *in, int* instructionArray){
         }
     }
 }
-

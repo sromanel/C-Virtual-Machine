@@ -7,35 +7,59 @@
 #include <stdlib.h>
 #include "CVM.h"
 
-int Stampa(const char *input){
-    int n_lines, first_read;
-    FILE *in;
-    char *textLine = NULL, *tempLine;
-    size_t line_in_buf_size = 0;
+void Stampa(int instruction_array[], int length){
+    int i = 0;
 
-    in = fopen(input, "r");
-
-    if(in){
-
-        /*
-         * Il seguente segmento di codice mi permette di saltare tutte
-         * le linee che non contengono un numero.
-         *
-         * USA atoi
-         * USA getline
-         */
-
-        while (getline(&tempLine, &line_in_buf_size, in) >= 0){
-            textLine = strtok(tempLine, ";");
-            if ((*textLine >= '0') && (*textLine <= '9')) {
-                first_read = atoi(textLine);
-                printf("%d\n", first_read);
-            }
+    while(i < length){
+        switch(instruction_array[i]){
+            case 0:
+                printf("[%3d] HALT\n", i);
+                i += 1;
+            case 1:
+                printf("[%3d] DISPLAY R%d\n", i, instruction_array[i+1]);
+                i += 2;
+            case 2:
+                printf("[%3d] PRINT_STACK %d\n", i, instruction_array[i+1]);
+                i += 2;
+            case 10:
+                printf("[%3d] PUSH R%d\n", i, instruction_array[i+1]);
+                i += 2;
+            case 11:
+                printf("[%3d] POP R%d\n", i, instruction_array[i+1]);
+                i += 2;
+            case 12:
+                printf("[%3d] MOV R%d %d\n", i, instruction_array[i+1], instruction_array[i+2]);
+                i += 3;
+            case 20:
+                printf("[%3d] CALL %d\n", i, instruction_array[i+1]);
+                i += 2;
+            case 21:
+                printf("[%3d] RET\n", i);
+                i += 1;
+            case 22:
+                printf("[%3d] JMP %d\n", i, instruction_array[i+1]);
+                i += 2;
+            case 23:
+                printf("[%3d] JZ %d\n", i, instruction_array[i+1]);
+                i += 2;
+            case 24:
+                printf("[%3d] JPOS %d\n", i, instruction_array[i+1]);
+                i += 2;
+            case 25:
+                printf("[%3d] JNEG %d\n", i, instruction_array[i+1]);
+                i += 2;
+            case 30:
+                printf("[%3d] ADD R%d R%d\n", i, instruction_array[i+1], instruction_array[i+2]);
+                i += 3;
+            case 31:
+                printf("[%3d] SUB R%d R%d\n", i, instruction_array[i+1], instruction_array[i+2]);
+                i += 3;
+            case 32:
+                printf("[%3d] MUL R%d R%d\n", i, instruction_array[i+1], instruction_array[i+2]);
+                i += 3;
+            case 33:
+                printf("[%3d] DIV R%d R%d\n", i, instruction_array[i+1], instruction_array[i+2]);
+                i += 3;
         }
-
-    } else {
-        printf("Errore nell'apertura del file\n");
     }
-
-    return 0;
 }
