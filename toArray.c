@@ -1,7 +1,5 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cert-err34-c"
 //
-// Created by rommy on 23/05/2019.
+// Created by Simone Romanello on 23/05/2019.
 //
 
 #include <stdio.h>
