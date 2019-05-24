@@ -21,7 +21,7 @@ int print_stack(int stack[], unsigned int sp, unsigned int n){
     return success;
 }
 
-int push(int record[], unsigned int *sp, int reg_number, int stack[]){
+int push(int const record[], unsigned int *sp, int reg_number, int stack[]){
     int success = 0;
     unsigned int temp = 0;
     temp = *sp;
@@ -36,7 +36,7 @@ int push(int record[], unsigned int *sp, int reg_number, int stack[]){
     return success;
 }
 
-int pop(int record[], unsigned int *sp, int reg_number, int stack[]){
+int pop(int record[], unsigned int *sp, int reg_number, int const stack[]){
     int success = 0, temp = 0;
     temp = *sp;
     if (temp > 0){
@@ -59,7 +59,7 @@ unsigned int jmp(unsigned int ip, int new_position){
     return ip;
 }
 
-int jz(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
+int jz(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     int success = 0;
     int temp = *sp;
     if(temp > 0){
@@ -74,7 +74,7 @@ int jz(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
     return success;
 }
 
-int jpos(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
+int jpos(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     int success = 0;
     int temp = *sp;
     if(temp > 0){
@@ -90,7 +90,7 @@ int jpos(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
     return success;
 }
 
-int jneg(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
+int jneg(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     int success = 0;
     int temp = *sp;
     if(temp > 0){
@@ -106,7 +106,7 @@ int jneg(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
     return success;
 }
 
-void add(int record[], int reg1, int reg2, unsigned int sp, int stack[]){
+void add(int const record[], int reg1, int reg2, unsigned int sp, int stack[]){
     int result = 0;
     result = record[reg1] + record[reg2];
 
