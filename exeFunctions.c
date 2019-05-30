@@ -3,7 +3,7 @@
 #include "CVM.h"
 
 void display(int record[], int reg_number){
-    printf("R%d = %d", reg_number, record[reg_number]);
+    printf("R%d = %d\n", reg_number, record[reg_number]);
 }
 
 void print_stack(int stack[], unsigned int sp, unsigned int n){
@@ -148,24 +148,27 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
         switch (instruction_array[ip]){
             case DISPLAY:
                 display(record, instruction_array[ip + 1]);
+                printf("Ho appena chiamato DISPLAY, ip è %d.\n", ip);
                 ip += 2;
                 break;
             case PRINT_STACK:
                 print_stack(stack, sp, instruction_array[ip+1]);
+                printf("Ho appena chiamato PRINT_STACK, ip è %d.\n", ip);
                 ip += 2;
                 break;
             case PUSH:
                 push(record, &sp,instruction_array[ip+1], stack);
-                printf("Ho inserito %d nello stack, ora sp è %d.\n", stack[sp-1], sp);
+                printf("Ho appena chiamato PUSH.\n");
                 ip += 2;
                 break;
             case POP:
                 pop(record, &sp, instruction_array[ip+1], stack);
-                printf("Ho inserito %d nello stack, ora sp è %d.\n", stack[sp], sp);
+                printf("Ho appena chiamato POP.\n");
                 ip += 2;
                 break;
             case MOV:
                 mov(record, instruction_array[ip+1], instruction_array[ip+2]);
+                printf("Ho appena chiamato MOV, ip è %d.\n", ip);
                 ip += 3;
                 break;
             case CALL:
@@ -176,33 +179,41 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
                 break;
             case JMP:
                 ip = jmp(ip, instruction_array[ip + 1]);
+                printf("Ho appena chiamato JMP.\n");
                 break;
             case JZ:
                 jz(&ip, &sp, stack, instruction_array[ip+1]);
+                printf("Ho appena chiamato JZ.\n");
                 ip += 2;
                 break;
             case JPOS:
                 jpos(&ip, &sp, stack, instruction_array[ip+1]);
+                printf("Ho appena chiamato JPOS.\n");
                 ip += 2;
                 break;
             case JNEG:
                 jneg(&ip, &sp, stack, instruction_array[ip+1]);
+                printf("Ho appena chiamato JNEG.\n");
                 ip += 2;
                 break;
             case ADD:
                 add(record, instruction_array[ip+1], instruction_array[ip+2], sp, stack);
+                printf("Ho appena chiamato ADD.\n");
                 ip += 3;
                 break;
             case SUB:
                 sub(record, instruction_array[ip+1], instruction_array[ip+2], sp, stack);
+                printf("Ho appena chiamato SUB.\n");
                 ip += 3;
                 break;
             case MUL:
                 mul(record, instruction_array[ip+1], instruction_array[ip+2], sp, stack);
+                printf("Ho appena chiamato MUL.\n");
                 ip += 3;
                 break;
             case DIV:
                 divi(record, instruction_array[ip+1], instruction_array[ip+2], sp, stack);
+                printf("Ho appena chiamato DIV.\n");
                 ip += 3;
                 break;
         }
