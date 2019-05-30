@@ -18,6 +18,7 @@
 #define MUL 32
 #define DIV 33
 
+void Print(char *filename);
 void Stampa(int instruction_array[], int length);
 void fillArray(FILE *in, int *instructionArray);
 unsigned int getSize(FILE *in);

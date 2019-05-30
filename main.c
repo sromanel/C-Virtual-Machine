@@ -3,9 +3,23 @@
 #include <stdlib.h>
 #include "CVM.h"
 
-int main() {
+int main(int argc, char *argv[]) {
 
-    FILE *in;
+    char *command;
+    char *filename;
+
+    command = argv[1];
+    filename = argv[2];
+
+    if(strcmp(command, "print") == 0){
+        Print(filename);
+    }   else if (strcmp(command, "execute") == 0){
+        //fai la execute
+    }   else {
+        printf("Comando non riconosciuto.\n");
+    }
+
+    /*FILE *in;
     int operazione = 0, *instruction_array = NULL, arraySize = 0;
     char instruction[7], filename[128] = " ";
 
@@ -39,7 +53,7 @@ int main() {
         }
 
         fclose(in);
-    }
+    }*/
 
     return 0;
 }
