@@ -14,6 +14,7 @@ void esegui (char *filename){
         rewind(in);
         instruction_array = (int*)malloc(sizeof(int) * array_size);
         fillArray(in, instruction_array);
+        execute(instruction_array, array_size, ip, stack, record, sp);
     }   else {
         perror("Errore: ");
     }

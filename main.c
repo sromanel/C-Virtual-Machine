@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     if(strcmp(command, "print") == 0){
         Print(filename);
     }   else if (strcmp(command, "execute") == 0){
-        //fai la execute
+        esegui(filename);
     }   else {
         printf("Comando non riconosciuto.\n");
     }
@@ -54,6 +54,8 @@ int main(int argc, char *argv[]) {
 
         fclose(in);
     }*/
+
+    (void)argc;
 
     return 0;
 }
