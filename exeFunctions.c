@@ -48,6 +48,7 @@ void mov(int record[], int reg_number, int value){
 
 unsigned int call(unsigned int ip, int new_position, unsigned int *sp, int stack[]){
     stack[*sp] = ip+2;
+    printf("Ho appena messo nello stack la posizione %d.\n", stack[*sp]);
     *sp += 1;
     return new_position;
 }
@@ -100,47 +101,51 @@ void jneg(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition
     }
 }
 
-void add(int const record[], int reg1, int reg2, unsigned int sp, int stack[]){
+void add(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
     int result = 0;
-    if(sp < 16384)
+    if(*sp < 16384)
     {
         result = record[reg1] + record[reg2];
-        stack[sp] = result;
+        stack[*sp] = result;
+        *sp+=1;
     }   else {
         exit(1);
     }
 }
 
-void sub(int const record[], int reg1, int reg2, unsigned int sp, int stack[]){
+void sub(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
     int result = 0;
-    if(sp < 16384)                      /*SI PUÒ FARE??????*/
+    if(*sp < 16384)                      /*SI PUÒ FARE??????*/
     {
         result = record[reg1] - record[reg2];
-        stack[sp] = result;
+        stack[*sp] = result;
+        *sp+=1;
     }   else {
         printf("errore\n");
         exit(1);
     }
 }
 
-void mul(int const record[], int reg1, int reg2, unsigned int sp, int stack[]){
+void mul(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
     int result = 0;
-    if(sp < 16384)
+    if(*sp < 16384)
     {
         result = record[reg1] * record[reg2];
-        stack[sp] = result;
+        stack[*sp] = result;
+        *sp+=1;
     }   else {
         exit(1);
     }
 }
 
-void divi(int const record[], int reg1, int reg2, unsigned int sp, int stack[]){
+void divi(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
     int result = 0;
-    if(sp < 16384)
+    if(*sp < 16384)
     {
         if(record[reg2] != 0){
             result = record[reg1] / record[reg2];
-            stack[sp] = result;
+            stack[*sp] = result;
+            *sp+=1;
         }   else {
             perror("Perror: ");
         }
@@ -167,13 +172,13 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
                 break;
             case PUSH:
                 push(record, &sp,instruction_array[ip+1], stack);
-                printf("Ho appena chiamato PUSH.\n");
+                printf("Ho appena chiamato PUSH, ip è %d.\n", ip);
                 ip += 2;
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
             case POP:
                 pop(record, &sp, instruction_array[ip+1], stack);
-                printf("Ho appena chiamato POP.\n");
+                printf("Ho appena chiamato POP, ip è %d.\n", ip);
                 ip += 2;
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
@@ -194,48 +199,48 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
                 break;
             case JMP:
                 ip = jmp(ip, instruction_array[ip + 1]);
-                printf("Ho appena chiamato JMP.\n");
+                printf("Ho appena chiamato JMP, ip è %d.\n", ip);
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
             case JZ:
                 jz(&ip, &sp, stack, instruction_array[ip+1]);
-                printf("Ho appena chiamato JZ.\n");
+                printf("Ho appena chiamato JZ, ip è %d.\n", ip);
                 ip += 2;
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
             case JPOS:
                 jpos(&ip, &sp, stack, instruction_array[ip+1]);
-                printf("Ho appena chiamato JPOS.\n");
+                printf("Ho appena chiamato JPOS, ip è %d.\n", ip);
                 ip += 2;
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
             case JNEG:
                 jneg(&ip, &sp, stack, instruction_array[ip+1]);
-                printf("Ho appena chiamato JNEG.\n");
+                printf("Ho appena chiamato JNEG, ip è %d.\n", ip);
                 ip += 2;
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
             case ADD:
-                add(record, instruction_array[ip+1], instruction_array[ip+2], sp, stack);
-                printf("Ho appena chiamato ADD.\n");
+                add(record, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
+                printf("Ho appena chiamato ADD, ip è %d.\n", ip);
                 ip += 3;
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
             case SUB:
-                sub(record, instruction_array[ip+1], instruction_array[ip+2], sp, stack);
-                printf("Ho appena chiamato SUB.\n");
+                sub(record, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
+                printf("Ho appena chiamato SUB, ip è %d.\n", ip);
                 ip += 3;
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
             case MUL:
-                mul(record, instruction_array[ip+1], instruction_array[ip+2], sp, stack);
-                printf("Ho appena chiamato MUL.\n");
+                mul(record, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
+                printf("Ho appena chiamato MUL, ip è %d.\n", ip);
                 ip += 3;
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
             case DIV:
-                divi(record, instruction_array[ip+1], instruction_array[ip+2], sp, stack);
-                printf("Ho appena chiamato DIV.\n");
+                divi(record, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
+                printf("Ho appena chiamato DIV, ip è %d.\n", ip);
                 ip += 3;
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
