@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "CVM.h"
 
-void Print (char *filename){
+void print (char *filename){
     FILE *in;
 
     in = fopen(filename, "r");
@@ -13,9 +13,11 @@ void Print (char *filename){
         rewind(in);
         instruction_array = (int*)malloc(sizeof(int) * arraySize);
         fillArray(in, instruction_array);
-        Stampa(instruction_array, arraySize);
+        prntFunction(instruction_array, arraySize);
     }   else {
-        printf("Errore nell'apertura del file.\n");
+        perror("Error: ");
     }
+
+    fclose(in);
 }
 

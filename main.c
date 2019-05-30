@@ -11,49 +11,13 @@ int main(int argc, char *argv[]) {
     command = argv[1];
     filename = argv[2];
 
-    if(strcmp(command, "print") == 0){
-        Print(filename);
-    }   else if (strcmp(command, "execute") == 0){
-        esegui(filename);
+    if((strcmp(command, "print") == 0) || (strcmp(command, "Print") == 0)){
+        print(filename);
+    }   else if ((strcmp(command, "execute") == 0) || (strcmp(command, "Execute") == 0)){
+        execute(filename);
     }   else {
-        printf("Comando non riconosciuto.\n");
+        printf("Wrong instruction.\n");
     }
-
-    /*FILE *in;
-    int operazione = 0, *instruction_array = NULL, arraySize = 0;
-    char instruction[7], filename[128] = " ";
-
-    printf("Scegliere l'operazione:\n1)stampa\n2)esegui\n");
-    scanf("%s", instruction);
-    if(strcmp(instruction, "stampa") == 0){
-        printf("Hai scelto stampa.\n");
-        operazione = 1;
-    }   else if(strcmp(instruction, "esegui") == 0){
-        printf("hai scelto esegui.\n");
-        operazione = 2;
-    }   else {
-        printf("Operazione non riconosciuta.\n");
-    }
-
-    if(operazione == 1 || operazione == 2){
-        printf("Inserire il nome del file.\n");
-        scanf("%s", filename);
-
-        in = fopen(filename, "r");
-
-        if(in){
-            arraySize = getSize(in);
-            rewind(in);
-            instruction_array = (int*)malloc(sizeof(int) * arraySize);
-            fillArray(in, instruction_array);
-
-            Stampa(instruction_array, arraySize);
-        }   else {
-            printf("Errore nell'apertura del file.\n");
-        }
-
-        fclose(in);
-    }*/
 
     (void)argc;
 

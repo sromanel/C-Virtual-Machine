@@ -18,12 +18,12 @@
 #define MUL 32
 #define DIV 33
 
-void Print(char *filename);
-void Stampa(int instruction_array[], int length);
+void print(char *filename);
+void prntFunction(int instruction_array[], int length);
 void fillArray(FILE *in, int *instructionArray);
 unsigned int getSize(FILE *in);
-void execute (int instruction_array[], unsigned int array_size, unsigned int ip, int stack[], int record[], unsigned int sp);
-void esegui (char *filename);
+void exeFunctions (int instruction_array[], unsigned int array_size, unsigned int ip, int stack[], int record[], unsigned int sp);
+void execute (char *filename);
 
 
 #endif

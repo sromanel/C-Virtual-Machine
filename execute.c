@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "CVM.h"
 
-void esegui (char *filename){
+void execute (char *filename){
 
     FILE *in;
     int *instruction_array = NULL, stack[16384] = {0}, record[32] = {0};
@@ -14,8 +14,10 @@ void esegui (char *filename){
         rewind(in);
         instruction_array = (int*)malloc(sizeof(int) * array_size);
         fillArray(in, instruction_array);
-        execute(instruction_array, array_size, ip, stack, record, sp);
+        exeFunctions(instruction_array, array_size, ip, stack, record, sp);
     }   else {
         perror("Errore: ");
     }
+
+    fclose(in);
 }

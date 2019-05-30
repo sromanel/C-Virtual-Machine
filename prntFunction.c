@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "CVM.h"
 
-void Stampa(int instruction_array[], int length){
+void prntFunction(int instruction_array[], int length){
     int i = 0;
 
     while(i < length){
