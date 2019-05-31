@@ -5,7 +5,7 @@
 void execute (char *filename){
 
     FILE *in;
-    int *instruction_array = NULL, stack[16384] = {0}, record[32] = {0};
+    int *instruction_array = NULL, stack[16384] = {0}, record[32] = {0}, i;
     unsigned int sp = 0, ip = 0, array_size = 0;
 
     in = fopen(filename, "r");
