@@ -51,7 +51,7 @@ void mov(int record[], int reg_number, int value){
 
 unsigned int call(unsigned int ip, int new_position, unsigned int *sp, int stack[]){
     stack[*sp] = ip+2;
-    /*printf("Ho appena messo nello stack la posizione %d.\n", stack[*sp]);*/
+    printf("Ho appena messo nello stack la posizione %d.\n", stack[*sp]);
     *sp += 1;
     return new_position;
 }
@@ -71,8 +71,10 @@ void jz(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     if(temp > 0){
         if(stack[temp - 1] == 0){
             *ip = newPosition;
-            *sp -= 1;
+        }   else {
+            *ip += 2;
         }
+        *sp -= 1;
     }   else {
         perror("Error: ");
         exit(1);
@@ -83,10 +85,11 @@ void jpos(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
     int temp = *sp;
     if(temp > 0){
         if(stack[temp-1] > 0){
-            stack[temp-1] = 0;          /*non sono sicuro*/
             *ip = newPosition;
-            *sp -= 1;
+        }   else {
+            *ip += 2;
         }
+        *sp -= 1;
     }   else {
         perror("Error: ");
         exit(1);
@@ -97,10 +100,11 @@ void jneg(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
     int temp = *sp;
     if(temp > 0){
         if(stack[temp-1] < 0){
-            stack[temp-1] = 0;          /*idem sopra*/
             *ip = newPosition;
-            *sp -= 1;
+        }   else {
+            *ip += 2;
         }
+        *sp -= 1;
     }   else {
         perror("Error: ");
         exit(1);
@@ -108,61 +112,45 @@ void jneg(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
 }
 
 void add(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((record[reg1] > 0) && (record[reg2] < INT_MAX - record[reg1])){
+    if ((record[reg2] > 0) && (record[reg1] > INT_MAX - record[reg2])){
         perror("Error: ");
         exit(1);
-    }   else if((record[reg1] < 0) && (record[reg2] < INT_MIN - record[reg1])){
+    }   else if((record[reg2] < 0) && (record[reg1] < INT_MIN - record[reg2])){
         perror("Error: ");
         exit(1);
     }   else {
         stack[*sp] = record[reg1] + record[reg2];
+        *sp += 1;
         /*printf("Ho appena inserito %d nello stack.\n", stack[*sp]);*/
-        *sp+=1;
     }
 }
 
 void sub(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    int result = 0;
-    if(*sp < 16384)                      /*SI PUÒ FARE??????*/
-    {
-        result = record[reg1] - record[reg2];
-        stack[*sp] = result;
-        /*printf("Ho appena inserito %d nello stack.\n", stack[*sp]);*/
-        *sp+=1;
-    }   else {
-        printf("errore\n");
+    if ((record[reg2] > 0) && (record[reg1] > INT_MAX - record[reg2])){
+        perror("Error: ");
         exit(1);
+    }   else if((record[reg2] < 0) && (record[reg1] < INT_MIN - record[reg2])){
+        perror("Error: ");
+        exit(1);
+    }   else {
+        stack[*sp] = record[reg1] - record[reg2];
+        *sp += 1;
+        /*printf("Ho appena inserito %d nello stack.\n", stack[*sp]);*/
     }
 }
 
 void mul(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((record[reg1] > 0) && (record[reg2] < INT_MAX - record[reg1])){             /*da controllare*/
-        perror("Error: ");
-        exit(1);
-    }   else if((record[reg1] < 0) && (record[reg2] < INT_MIN - record[reg1])){
-        perror("Error: ");
-        exit(1);
-    }   else {
-        stack[*sp] = record[reg1] * record[reg2];
-        /*printf("Ho appena inserito %d nello stack.\n", stack[*sp]);*/
-        *sp+=1;
-    }
+
+    stack[*sp] = record[reg1] * record[reg2];
+    *sp += 1;
 }
 
 void divi(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    int result = 0;
-    if(*sp < 16384)
-    {
-        if(record[reg2] != 0){
-            result = record[reg1] / record[reg2];
-            stack[*sp] = result;
-            /*printf("Ho appena inserito %d nello stack.\n", stack[*sp]);*/
-            *sp+=1;
-        }   else {
-            perror("Perror: ");
-        }
-
+    if(record[reg2] != 0){
+        stack[*sp] = record[reg1] * record[reg2];
+        *sp += 1;
     }   else {
+        perror("Errore: ");
         exit(1);
     }
 }
@@ -212,7 +200,7 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
             case RET:
                 ip = ret(&sp, stack);
                 printf("Ho appena chiamato RET, ip è %d e sp è %d.\n", ip, sp);
-                ip += 1;
+                /*ip += 1;*/
                 break;
             case JMP:
                 ip = jmp(ip, instruction_array[ip + 1]);
@@ -234,7 +222,6 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
             case JNEG:
                 jneg(&ip, &sp, stack, instruction_array[ip+1]);
                 printf("Ho appena chiamato JNEG, ip è %d.\n", ip);
-                ip += 2;
                 printf("Ora ip è %d, sp: %d.\n", ip, sp);
                 break;
             case ADD:
