@@ -3,4 +3,4 @@ project(C_Virtual_Machine C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(C_Virtual_Machine main.c prntFunction.c CVM.h toArray.c execute.c exeFunctions.c print.c)
+add_executable(C_Virtual_Machine main.c prntFunctions.c CVM.h toArray.c execute.c exeFunctions.c print.c)
