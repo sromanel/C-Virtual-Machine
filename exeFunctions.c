@@ -187,11 +187,9 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
                 break;
             case JZ:
                 jz(&ip, &sp, stack, instruction_array[ip+1]);
-                ip += 2;
                 break;
             case JPOS:
                 jpos(&ip, &sp, stack, instruction_array[ip+1]);
-                ip += 2;
                 break;
             case JNEG:
                 jneg(&ip, &sp, stack, instruction_array[ip+1]);
