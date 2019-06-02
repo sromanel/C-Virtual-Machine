@@ -2,7 +2,7 @@
 37 ; numero l i n e e ( p o s i z i o n e massima )
 12 ; [ 0 ] MOV R0 5
 0 ; [ 1 ]
-5 ; [ 2 ]
+1073741824 ; [ 2 ]
 20 ; [ 3 ] CALL f a t t o r i a l e
 8 ; [ 4 ]
 1 ; [ 5 ] DISPLAY R30
@@ -11,7 +11,7 @@
 ; f a t t o r i a l e :
 12 ; [ 8 ] MOV R1 2
 1 ; [ 9 ]
-2 ; [ 1 0 ]
+1073741823 ; [ 1 0 ]
 12 ; [ 1 1 ] MOV R20 1
 20 ; [ 1 2 ]
 1 ; [ 1 3 ]
