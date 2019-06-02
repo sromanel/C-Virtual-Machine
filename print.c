@@ -4,7 +4,6 @@
 
 void print (char *filename){
     FILE *in;
-
     in = fopen(filename, "r");
 
     if(in){

@@ -26,7 +26,7 @@ void fillArray(FILE *in, int* instructionArray){
 
     while (getline(&line_buf, &line_in_buf_size, in) >= 0){
         textLine = strtok(line_buf, ";");
-        if ((*textLine >= '0') && (*textLine <= '9')) {
+        if (((*textLine >= '0') && (*textLine <= '9')) || (*textLine == '-')) {
             number = atoi(textLine);
             if(first_read == 0){
                 first_read = 1;
