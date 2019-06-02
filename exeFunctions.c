@@ -45,7 +45,6 @@ void pop(int record[], unsigned int *sp, int reg_number, int const stack[]){
 
 void mov(int record[], int reg_number, int value){
     record[reg_number] = value;
-    printf("Ho appena inserito %d in R[%3d]\n", value, reg_number);
 }
 
 unsigned int call(unsigned int ip, int new_position, unsigned int *sp, int stack[]){
@@ -123,7 +122,7 @@ void add(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
 }
 
 void sub(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((record[reg1] > 0) && (record[reg1] > INT_MAX + record[reg2])){
+    if ((record[reg1] > 0) && (record[reg1] > INT_MAX - record[reg2])){
         printf("Error: Overflow caused by subtraction.\n");
         exit(1);
     }   else if((record[reg2] < 0) && (record[reg1] < INT_MIN - record[reg2])){
