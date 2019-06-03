@@ -1,6 +1,11 @@
 #ifndef C_VIRTUAL_MACHINE_CVM_H
 #define C_VIRTUAL_MACHINE_CVM_H
 
+/*
+ * The following definitions associate to every number the corresponding instruction.
+ * This makes for an easier to read code when switching cases.
+ */
+
 #define HALT 0
 #define DISPLAY 1
 #define PRINT_STACK 2
@@ -17,6 +22,11 @@
 #define SUB 31
 #define MUL 32
 #define DIV 33
+
+
+/*
+ * Definitions of the used functions.
+ */
 
 void print(char *filename);
 void prntFunction(int instruction_array[], int length);
