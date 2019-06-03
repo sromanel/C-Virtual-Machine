@@ -1,8 +1,8 @@
 ;trova segno
 28 ;numero linee
-12 ;[ 0] MOV R0 99
+12 ;[ 0] MOV R0 -18
 0  ;[ 1]	
-99 ;[ 2]
+-18;[ 2]
 20 ;[ 3] CALL checksign
 8  ;[ 4]
 1  ;[ 5] DISPLAY R30

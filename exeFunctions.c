@@ -8,35 +8,20 @@ void display(int record[], int reg_number){
 }
 
 void print_stack(int stack[], unsigned int sp, unsigned int n){
-    if (sp - n > 0){
-        while (sp >= n){
-            printf("STACK [%3d] %d\n", sp - 1, stack[sp - 1]);
-            sp -= 1;
-        }
-    }   else {
-        perror("Error: ");
-        exit(1);
+    while (sp >= n){
+        printf("STACK [%3d] %d\n", sp - 1, stack[sp - 1]);
+        sp -= 1;
     }
 }
 
 void push(int const record[], unsigned int *sp, int reg_number, int stack[]){
-    if(*sp < 16384){
-        stack[*sp] = record[reg_number];
-        *sp += 1;
-    }   else {
-        perror("Error: ");
-        exit(1);
-    }
+    stack[*sp] = record[reg_number];
+    *sp += 1;
 }
 
 void pop(int record[], unsigned int *sp, int reg_number, int const stack[]){
-    if (*sp > 0){
-        *sp -= 1;
-        record[reg_number] = stack[*sp];
-    }   else {
-        perror("Error: ");
-        exit(1);
-    }
+    *sp -= 1;
+    record[reg_number] = stack[*sp];
 }
 
 void mov(int record[], int reg_number, int value){
@@ -60,53 +45,38 @@ unsigned int jmp(unsigned int ip, int new_position){
 }
 
 void jz(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
-    if(*sp > 0){
-        if(stack[*sp - 1] == 0){
-            *ip = newPosition;
-        }   else {
-            *ip += 2;
-        }
-        *sp -= 1;
+    if(stack[*sp - 1] == 0){
+        *ip = newPosition;
     }   else {
-        perror("Error: ");
-        exit(1);
+        *ip += 2;
     }
+
+    *sp -= 1;
 }
 
 void jpos(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
-    if(*sp > 0){
-        if(stack[*sp - 1] > 0){
-            *ip = newPosition;
-        }   else {
-            *ip += 2;
-        }
-        *sp -= 1;
+    if(stack[*sp - 1] > 0){
+        *ip = newPosition;
     }   else {
-        perror("Error: ");
-        exit(1);
+        *ip += 2;
     }
+
+    *sp -= 1;
 }
 
 void jneg(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
-    if(*sp > 0){
-        if(stack[*sp - 1] < 0){
-            *ip = newPosition;
-        }   else {
-            *ip += 2;
-        }
-        *sp -= 1;
+    if(stack[*sp - 1] < 0){
+        *ip = newPosition;
     }   else {
-        perror("Error: ");
-        exit(1);
+        *ip += 2;
     }
+
+    *sp -= 1;
 }
 
 void add(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((record[reg2] > 0) && (record[reg1] > INT_MAX - record[reg2])){
-        printf("Error: Overflow caused by sum.\n");
-        exit(1);
-    }   else if((record[reg2] < 0) && (record[reg1] < INT_MIN - record[reg2])){
-        printf("Error: Underflow caused by multiplication.\n");
+    if ((record[reg1] > INT_MAX - record[reg2]) || (record[reg1] < INT_MIN - record[reg2])){
+        printf("Program termination due to overflow in ADD.\n");
         exit(1);
     }   else {
         stack[*sp] = record[reg1] + record[reg2];
@@ -115,11 +85,8 @@ void add(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
 }
 
 void sub(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((record[reg1] > 0) && (record[reg1] > INT_MAX - record[reg2])){
-        printf("Error: Overflow caused by subtraction.\n");
-        exit(1);
-    }   else if((record[reg2] < 0) && (record[reg1] < INT_MIN - record[reg2])){
-        printf("Error: Underflow caused by sum.\n");
+    if ((record[reg1] > (INT_MAX + record[reg2])) || (record[reg1] < (INT_MIN + record[reg2]))){
+        printf("Program termination due to overflow in SUB.\n");
         exit(1);
     }   else {
         stack[*sp] = record[reg1] - record[reg2];
@@ -128,22 +95,30 @@ void sub(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
 }
 
 void mul(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if(record[reg2] > INT_MAX/record[reg1]){
-        printf("Error: Overflow caused by multiplication.\n");
-        exit(1);
-    }   else if (record[reg2] < INT_MIN/record[reg1]){
-        printf("Error: Underflow caused by multiplication.\n");
-        exit(1);
-    }   else {
-        stack[*sp] = record[reg1] * record[reg2];
+    if ((record[reg1] == 0) || (record[reg2] == 0)){
+        stack[*sp] = 0;
         *sp += 1;
+    }   else {
+        if ((record[reg1] > (INT_MAX / record[reg2])) || (record[reg1] < (INT_MIN / record[reg2]))){
+            printf("Program termination due to overflow in MUL.\n");
+            exit(1);
+        }   else {
+            stack[*sp] = record[reg1] * record[reg2];
+            *sp += 1;
+        }
     }
 }
 
 void divi(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
     if(record[reg2] != 0){
-        stack[*sp] = record[reg1] * record[reg2];
-        *sp += 1;
+        if((record[reg1] > (INT_MAX * record[reg2])) || (record[reg1] < (INT_MIN * record[reg2]))){
+            printf("Program termination due to overflow in DIV.\n");
+            exit(1);
+        }   else {
+            stack[*sp] = record[reg1] / record[reg2];
+            *sp += 1;
+        }
+
     }   else {
         printf("Error: Division by zero.\n");
         exit(1);
