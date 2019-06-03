@@ -22,7 +22,7 @@ void print(char *filename);
 void prntFunction(int instruction_array[], int length);
 void fillArray(FILE *in, int *instructionArray);
 unsigned int getSize(FILE *in);
-void exeFunctions (int instruction_array[], unsigned int array_size, unsigned int ip, int stack[], int record[], unsigned int sp);
+void exeFunctions (int instruction_array[], unsigned int array_size, unsigned int ip, int stack[], int reg[], unsigned int sp);
 void execute (char *filename);
 
 

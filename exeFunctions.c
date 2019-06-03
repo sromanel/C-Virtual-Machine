@@ -3,9 +3,19 @@
 #include <limits.h>
 #include "CVM.h"
 
-void display(int record[], int reg_number){
-    printf("R%d = %d\n", reg_number, record[reg_number]);
+/*
+ * display() prints on terminal the value of the indicated register, preceded by the register number.
+ */
+
+void display(int reg[], int reg_number){
+    printf("R%d = %d\n", reg_number, reg[reg_number]);
 }
+
+
+/*
+ * print_stack() prints on therminal the content of the stack from the sp position to the n-th,
+ * with n <= sp.
+ */
 
 void print_stack(int stack[], unsigned int sp, unsigned int n){
     while (sp >= n){
@@ -14,19 +24,43 @@ void print_stack(int stack[], unsigned int sp, unsigned int n){
     }
 }
 
-void push(int const record[], unsigned int *sp, int reg_number, int stack[]){
-    stack[*sp] = record[reg_number];
+
+/*
+ * push() puts the content of the register in the reg_number position on the stack,
+ * then increases the stack pointer by one position.
+ */
+
+void push(int const reg[], unsigned int *sp, int reg_number, int stack[]){
+    stack[*sp] = reg[reg_number];
     *sp += 1;
 }
 
-void pop(int record[], unsigned int *sp, int reg_number, int const stack[]){
+
+/*
+ * pop() decreases the stack pointer by one position, then puts the content of the
+ * stack in the sp position into the register on the reg_number position.
+ */
+
+void pop(int reg[], unsigned int *sp, int reg_number, int const stack[]){
     *sp -= 1;
-    record[reg_number] = stack[*sp];
+    reg[reg_number] = stack[*sp];
 }
 
-void mov(int record[], int reg_number, int value){
-    record[reg_number] = value;
+
+/*
+ * mov() assigns to the reg_number register the value indicated in "value".
+ */
+
+void mov(int reg[], int reg_number, int value){
+    reg[reg_number] = value;
 }
+
+
+/*
+ * call() saves on the stack the position of the instruction following call() itself and increases the
+ * stack pointer by one position, then returns the position where the instruction pointer will point to
+ * after returning from the function.
+ */
 
 unsigned int call(unsigned int ip, int new_position, unsigned int *sp, int stack[]){
     stack[*sp] = ip + 2;
@@ -74,48 +108,48 @@ void jneg(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition
     *sp -= 1;
 }
 
-void add(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((record[reg1] > INT_MAX - record[reg2]) || (record[reg1] < INT_MIN - record[reg2])){
+void add(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
+    if ((reg[reg1] > INT_MAX - reg[reg2]) || (reg[reg1] < INT_MIN - reg[reg2])){
         printf("Program termination due to overflow in ADD.\n");
         exit(1);
     }   else {
-        stack[*sp] = record[reg1] + record[reg2];
+        stack[*sp] = reg[reg1] + reg[reg2];
         *sp += 1;
     }
 }
 
-void sub(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((record[reg1] > (INT_MAX + record[reg2])) || (record[reg1] < (INT_MIN + record[reg2]))){
+void sub(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
+    if ((reg[reg1] > (INT_MAX + reg[reg2])) || (reg[reg1] < (INT_MIN + reg[reg2]))){
         printf("Program termination due to overflow in SUB.\n");
         exit(1);
     }   else {
-        stack[*sp] = record[reg1] - record[reg2];
+        stack[*sp] = reg[reg1] - reg[reg2];
         *sp += 1;
     }
 }
 
-void mul(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((record[reg1] == 0) || (record[reg2] == 0)){
+void mul(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
+    if ((reg[reg1] == 0) || (reg[reg2] == 0)){
         stack[*sp] = 0;
         *sp += 1;
     }   else {
-        if ((record[reg1] > (INT_MAX / record[reg2])) || (record[reg1] < (INT_MIN / record[reg2]))){
+        if ((reg[reg1] > (INT_MAX / reg[reg2])) || (reg[reg1] < (INT_MIN / reg[reg2]))){
             printf("Program termination due to overflow in MUL.\n");
             exit(1);
         }   else {
-            stack[*sp] = record[reg1] * record[reg2];
+            stack[*sp] = reg[reg1] * reg[reg2];
             *sp += 1;
         }
     }
 }
 
-void divi(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if(record[reg2] != 0){
-        if(record[reg1] == INT_MIN && record[reg2] == -1){
+void divi(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
+    if(reg[reg2] != 0){
+        if(reg[reg1] == INT_MIN && reg[reg2] == -1){
             printf("Program termination due to overflow in DIV.\n");
             exit(1);
         }   else {
-            stack[*sp] = record[reg1] / record[reg2];
+            stack[*sp] = reg[reg1] / reg[reg2];
             *sp += 1;
         }
 
@@ -125,14 +159,14 @@ void divi(int const record[], int reg1, int reg2, unsigned int *sp, int stack[])
     }
 }
 
-void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int ip, int stack[], int record[], unsigned int sp){
+void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int ip, int stack[], int reg[], unsigned int sp){
 
     while(instruction_array[ip] != HALT && ip < array_size){
 
         switch (instruction_array[ip]){
 
             case DISPLAY:
-                display(record, instruction_array[ip + 1]);
+                display(reg, instruction_array[ip + 1]);
                 ip += 2;
                 break;
             case PRINT_STACK:
@@ -140,15 +174,15 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
                 ip += 2;
                 break;
             case PUSH:
-                push(record, &sp,instruction_array[ip+1], stack);
+                push(reg, &sp,instruction_array[ip+1], stack);
                 ip += 2;
                 break;
             case POP:
-                pop(record, &sp, instruction_array[ip+1], stack);
+                pop(reg, &sp, instruction_array[ip+1], stack);
                 ip += 2;
                 break;
             case MOV:
-                mov(record, instruction_array[ip+1], instruction_array[ip+2]);
+                mov(reg, instruction_array[ip+1], instruction_array[ip+2]);
                 ip += 3;
                 break;
             case CALL:
@@ -170,19 +204,19 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
                 jneg(&ip, &sp, stack, instruction_array[ip+1]);
                 break;
             case ADD:
-                add(record, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
+                add(reg, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
                 ip += 3;
                 break;
             case SUB:
-                sub(record, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
+                sub(reg, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
                 ip += 3;
                 break;
             case MUL:
-                mul(record, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
+                mul(reg, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
                 ip += 3;
                 break;
             case DIV:
-                divi(record, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
+                divi(reg, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
                 ip += 3;
                 break;
         }

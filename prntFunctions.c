@@ -1,6 +1,14 @@
 #include <stdio.h>
 #include "CVM.h"
 
+/*
+ * This function reads every number in the array by incrementing an index called 'i', and doing so until
+ * i reaches the end of the array. For every position it prints the index in the array where the instruction is found,
+ * the associated instruction (the associations between numbers and instructions are defined in the header file) and
+ * the relative parameters, if present. Then the index is incremented by adding to it the number of parameters expected
+ * by the instruction it just read plus one (the array cell of the instruction itself).
+ */
+
 void prntFunction(int instruction_array[], int length){
     int i = 0;
 
