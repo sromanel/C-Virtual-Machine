@@ -111,7 +111,7 @@ void mul(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
 
 void divi(int const record[], int reg1, int reg2, unsigned int *sp, int stack[]){
     if(record[reg2] != 0){
-        if((record[reg1] > (INT_MAX * record[reg2])) || (record[reg1] < (INT_MIN * record[reg2]))){
+        if(record[reg1] == INT_MIN && record[reg2] == -1){
             printf("Program termination due to overflow in DIV.\n");
             exit(1);
         }   else {
