@@ -44,7 +44,7 @@ unsigned int jmp(unsigned int ip, int new_position){
     return ip;
 }
 
-void jz(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
+void jz(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     if(stack[*sp - 1] == 0){
         *ip = newPosition;
     }   else {
@@ -54,7 +54,7 @@ void jz(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
     *sp -= 1;
 }
 
-void jpos(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
+void jpos(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     if(stack[*sp - 1] > 0){
         *ip = newPosition;
     }   else {
@@ -64,7 +64,7 @@ void jpos(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
     *sp -= 1;
 }
 
-void jneg(unsigned int *ip, unsigned int *sp, int stack[], int newPosition){
+void jneg(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     if(stack[*sp - 1] < 0){
         *ip = newPosition;
     }   else {
