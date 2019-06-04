@@ -146,8 +146,8 @@ void jneg(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition
 
 void add(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
 
-    long int result = 0;
-    result = reg[reg1] + reg[reg2];
+    long result = 0;
+    result = (long)reg[reg1] + (long)reg[reg2];
     if (result > INT_MAX || result < INT_MIN){
         printf("Program termination due to overflow in ADD.\n");
         exit(1);
@@ -167,8 +167,8 @@ void add(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
 
 void sub(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
 
-    long int result = 0;
-    result = reg[reg1] - reg[reg2];
+    long result = 0;
+    result = (long)reg[reg1] - (long)reg[reg2];
     if (result > INT_MAX || result < INT_MIN){
         printf("Program termination due to overflow in SUB.\n");
         exit(1);
@@ -188,8 +188,8 @@ void sub(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
 
 void mul(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
 
-    long int result = 0;
-    result = reg[reg1] * reg[reg2];
+    long result = 0;
+    result = (long)reg[reg1] * (long)reg[reg2];
 
     if (result > INT_MAX || result < INT_MIN){
         printf("Program termination due to overflow in MUL.\n");
