@@ -68,15 +68,32 @@ unsigned int call(unsigned int ip, int new_position, unsigned int *sp, int stack
     return new_position;
 }
 
+
+/*
+ * ret() decrements the stack pointer by one position, then returns the value stored on the stack in that position.
+ * Said value will be assigned to the instruction pointer.
+ */
+
 unsigned int ret(unsigned int *sp, int stack[]){
     *sp -= 1;
     return stack[*sp];
 }
 
-unsigned int jmp(unsigned int ip, int new_position){
-    ip = new_position;
-    return ip;
+
+/*
+ * jmp() returns the value of the  new position, which will be assigned to the instruction pointer after the function call.
+ */
+
+unsigned int jmp(int new_position){
+    return (unsigned int)new_position;
 }
+
+
+/*
+ * jz() checks if the last element to be inserted in the stack is equal to 0. If so, it assigns to the instruction pointer a new position
+ * (which is passed to the function), otherwise it increments the instruction pointer by two positions (the instruction itself and its newPosition parameter).
+ * In any case, it decrements the stack pointer by one position.
+ */
 
 void jz(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     if(stack[*sp - 1] == 0){
@@ -88,6 +105,12 @@ void jz(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     *sp -= 1;
 }
 
+/*
+ * jpos() checks if the last element to be inserted in the stack is greater than 0. If so, it assigns to the instruction pointer a new position
+ * (which is passed to the function), otherwise it increments the instruction pointer by two positions (the instruction itself and its newPosition parameter).
+ * In any case, it decrements the stack pointer by one position.
+ */
+
 void jpos(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     if(stack[*sp - 1] > 0){
         *ip = newPosition;
@@ -97,6 +120,13 @@ void jpos(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition
 
     *sp -= 1;
 }
+
+
+/*
+ * jneg() checks if the last element to be inserted in the stack is less than 0. If so, it assigns to the instruction pointer a new position
+ * (which is passed to the function), otherwise it increments the instruction pointer by two positions (the instruction itself and its newPosition parameter).
+ * In any case, it decrements the stack pointer by one position.
+ */
 
 void jneg(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
     if(stack[*sp - 1] < 0){
@@ -108,40 +138,80 @@ void jneg(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition
     *sp -= 1;
 }
 
+
+/*
+ * add() takes the content of the reg1 and reg2 registers, sums them, stores them in the stack and increases the stack pointer by one position.
+ * However, it only does so if the sum doesn't produce any overflow, in which case it prints a message relative to the error then quits the program.
+ */
+
 void add(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((reg[reg1] > INT_MAX - reg[reg2]) || (reg[reg1] < INT_MIN - reg[reg2])){
+
+    long int result = 0;
+    result = reg[reg1] + reg[reg2];
+    if (result > INT_MAX || result < INT_MIN){
         printf("Program termination due to overflow in ADD.\n");
         exit(1);
     }   else {
-        stack[*sp] = reg[reg1] + reg[reg2];
+        stack[*sp] = (int)result;
         *sp += 1;
     }
 }
 
+
+/*
+ * sub() takes the content of the reg1 and reg2 registers, subtracts the content of the register reg2 from reg1,
+ * stores the result of the operation in the stack and increases the stack pointer by one position.
+ * However, it only does so if the subtraction doesn't produce any overflow,
+ * in which case it prints a message relative to the error then quits the program.
+ */
+
 void sub(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((reg[reg1] > (INT_MAX + reg[reg2])) || (reg[reg1] < (INT_MIN + reg[reg2]))){
+
+    long int result = 0;
+    result = reg[reg1] - reg[reg2];
+    if (result > INT_MAX || result < INT_MIN){
         printf("Program termination due to overflow in SUB.\n");
         exit(1);
     }   else {
-        stack[*sp] = reg[reg1] - reg[reg2];
+        stack[*sp] = (int)result;
         *sp += 1;
     }
 }
 
+
+/*
+ * mul() takes the content of the reg1 and reg2 registers, multiplies them,
+ * stores the result of the operation in the stack and increases the stack pointer by one position.
+ * However, it only does so if the multiplication doesn't produce any overflow,
+ * in which case it prints a message relative to the error then quits the program.
+ */
+
 void mul(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if ((reg[reg1] == 0) || (reg[reg2] == 0)){
-        stack[*sp] = 0;
-        *sp += 1;
+
+    long int result = 0;
+    result = reg[reg1] * reg[reg2];
+
+    if (result > INT_MAX || result < INT_MIN){
+        printf("Program termination due to overflow in MUL.\n");
+        exit(1);
     }   else {
-        if ((reg[reg1] > (INT_MAX / reg[reg2])) || (reg[reg1] < (INT_MIN / reg[reg2]))){
-            printf("Program termination due to overflow in MUL.\n");
-            exit(1);
-        }   else {
-            stack[*sp] = reg[reg1] * reg[reg2];
-            *sp += 1;
-        }
+        stack[*sp] = (int)result;
+        *sp += 1;
     }
 }
+
+
+/*
+ * divi() takes the content of the reg1 and reg2 registers, divides the content of the register reg1 by reg2,
+ * stores the result of the operation in the stack and increases the stack pointer by one position.
+ * However, it only does so if the division doesn't produce any overflow or underflow,
+ * in which case it prints a message relative to the error then quits the program. This behaviour only occurs
+ * if the dividend is equal to INT_MAX and the divisor is equal to -1: when dividing two numbers greater than 1 (which is
+ * our case since an int can't have values between 0 and 1) the result will surely have a smaller absolute value than the dividend.
+ * The only instance in which an overflow may occur is when the dividend takes the value of INT_MIN (which is -2147483648) and
+ * the divisor is -1: this would lead to the result of +2147483648, which is equal to INT_MAX (+2147483647) plus 1, therefore out of the upper integer bound.
+ * Moreover, the function checks at its beginning if the divisor is 0, in which case it prints an error on the terminal and quits the program.
+ */
 
 void divi(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
     if(reg[reg2] != 0){
@@ -158,6 +228,14 @@ void divi(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
         exit(1);
     }
 }
+
+
+/*
+ * exeFunctions() reads the numbers stored in instruction_array using an index called ip (instruction pointer), and does so until
+ * ip reaches the end of the array or the read instruction is "HALT". For every position, it reads the stored number, translates it into
+ * an instruction then calls the instruction associated to said number, passing to it parameters stored after the position of the instruction itself, if expected.
+ * Each of these functions will change the values of the various pointers and array elements.
+ */
 
 void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int ip, int stack[], int reg[], unsigned int sp){
 
@@ -192,7 +270,7 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
                 ip = ret(&sp, stack);
                 break;
             case JMP:
-                ip = jmp(ip, instruction_array[ip + 1]);
+                ip = jmp(instruction_array[ip + 1]);
                 break;
             case JZ:
                 jz(&ip, &sp, stack, instruction_array[ip+1]);
