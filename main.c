@@ -23,9 +23,9 @@ int main(int argc, char *argv[]) {
     command = argv[1];
     filename = argv[2];
 
-    if(strcasecmp(command, "print") == 0){
+    if((strcasecmp(command, "print") == 0) || (strcasecmp(command, "stampa") == 0)){
         print(filename);
-    }   else if (strcasecmp(command, "execute") == 0){
+    }   else if ((strcasecmp(command, "execute") == 0) || (strcasecmp(command, "esegui") == 0)){
         execute(filename);
     }   else {
         printf("Wrong instruction.\n");
