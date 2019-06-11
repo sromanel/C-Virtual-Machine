@@ -10,13 +10,13 @@
  * Then it allocates instruction_array for the needed amount of memory using the
  * value returned by getSize() and uses rewind() to make the file pointer point at the beginning of the file again.
  * Then, it calls the fillArray() function which fills its cells with the numbers (i.e. instructions and parameters) read from the file.
- * Ultimately, it calls exeFunctions() to execute the content of the array, as requested.
+ * Ultimately, it calls exeFunctions() to execute the content of the array, as required.
  */
 
 void execute (char *filename){
 
     FILE *in;
-    int *instruction_array = NULL, stack[16384] = {0}, reg[32] = {0};
+    int *instruction_array = NULL, stack[STACK_SIZE] = {0}, reg[REG_SIZE] = {0};
     unsigned int sp = 0, ip = 0, array_size = 0;
 
     in = fopen(filename, "r");
@@ -26,9 +26,9 @@ void execute (char *filename){
         instruction_array = (int*)malloc(sizeof(int) * array_size);
         fillArray(in, instruction_array);
         exeFunctions(instruction_array, array_size, ip, stack, reg, sp);
+	free(instruction_array);
     }   else {
-        perror("Error: ");
-        fclose(in);
+        perror("Error");
         exit(1);
     }
 

@@ -1,5 +1,8 @@
-;trova segno
-28 ;numero linee
+;checksign
+;this program takes an input number (stored in R0)
+;then returns -1 if said number is <0, zero if =0, +1 if >+.
+;the main focus of this program is to test the correct behaviour of the jz, jpos and jneg functions
+28 ;number of lines
 12 ;[ 0] MOV R0 -18
 0  ;[ 1]	
 -18;[ 2]
@@ -29,4 +32,4 @@
 30 ;[25]
 1  ;[26]
 21 ;[27] RET
-;fine
+;end

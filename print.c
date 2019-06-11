@@ -22,12 +22,11 @@ void print (char *filename){
         rewind(in);
         fillArray(in, instruction_array);
         prntFunction(instruction_array, arraySize);
+	free(instruction_array);
     }   else {
-        perror("Error: ");
-        fclose(in);
+        perror("Error");
         exit(1);
     }
 
     fclose(in);
 }
-

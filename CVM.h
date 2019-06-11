@@ -1,10 +1,10 @@
 #ifndef C_VIRTUAL_MACHINE_CVM_H
 #define C_VIRTUAL_MACHINE_CVM_H
 
-/*
- * The following definitions associate to every number the corresponding instruction.
- * This makes for an easier to read code when switching cases.
- */
+ /*
+  * The following definitions associate the corresponding instruction to every number.
+  * This makes for an easier to read code when switching cases.
+  */
 
 #define HALT 0
 #define DISPLAY 1
@@ -23,10 +23,18 @@
 #define MUL 32
 #define DIV 33
 
+ /*
+  * The following definitions define the sizes of the "reg" and "stack" arrays.
+  * The former contains 32 registers, the latter 16384 integer values (one integer is 4 bytes,
+  * 16384 * 4B = 64KB).
+  */
 
-/*
- * Definitions of the used functions.
- */
+#define REG_SIZE 32
+#define STACK_SIZE 16384
+
+ /*
+  * Definitions of the used functions.
+  */
 
 void print(char *filename);
 void prntFunction(int instruction_array[], int length);

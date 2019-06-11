@@ -32,9 +32,11 @@ unsigned int getSize(FILE *in){
             }
         }
     }
-
+    
+    free(line_buf);
     return (unsigned int)number;
 }
+
 
 /*
  * the fillArray() function takes a valid file and the pointer to an array as inputs,
@@ -49,14 +51,15 @@ unsigned int getSize(FILE *in){
  */
 
 void fillArray(FILE *in, int* instructionArray){
-    char *textLine = NULL, *line_buf = NULL, *ptr = NULL;
+    char *textLine = NULL, *nextChar = NULL, *line_buf = NULL, *ptr = NULL;
     size_t line_in_buf_size = 0;
     int first_read = 0, i = 0;
     long number = 0;
 
     while (getline(&line_buf, &line_in_buf_size, in) >= 0){
         textLine = strtok(line_buf, ";");
-        if (((*textLine >= '0') && (*textLine <= '9')) || (*textLine == '-')) {
+        nextChar = textLine + 1;
+        if (((*textLine >= '0') && (*textLine <= '9')) || ((*textLine == '-') && (*nextChar >= '0') && (*nextChar <= '9'))) {
             number = strtol(textLine, &ptr, 10);
             if(first_read == 0){
                 first_read = 1;
@@ -72,4 +75,6 @@ void fillArray(FILE *in, int* instructionArray){
             }
         }
     }
+ 
+    free(line_buf);
 }

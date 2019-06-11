@@ -4,23 +4,38 @@
 #include "CVM.h"
 
 /*
+ * The following instructions check if they're given acceptable (as in not out of bound) parameters
+ * before proceeding with their tasks.
+ */
+
+/*
  * display() prints on terminal the value of the indicated register, preceded by the register number.
  */
 
 void display(int reg[], int reg_number){
-    printf("R%d = %d\n", reg_number, reg[reg_number]);
+    if(reg_number >= 0 && reg_number < REG_SIZE){
+        printf("R%d = %d\n", reg_number, reg[reg_number]);
+    }   else {
+        printf("Program terminated: out of bound register index.\n");
+        exit(1);
+    }
 }
 
 
 /*
- * print_stack() prints on therminal the content of the stack from the sp position to the n-th,
+ * print_stack() prints on terminal the content of the stack from the sp position to the n-th,
  * with n <= sp.
  */
 
 void print_stack(int stack[], unsigned int sp, unsigned int n){
-    while (sp >= n){
-        printf("STACK [%3d] %d\n", sp - 1, stack[sp - 1]);
-        sp -= 1;
+    if(sp >= n){
+        while (sp >= n){
+            printf("STACK [%3d] %d\n", sp - 1, stack[sp - 1]);
+            sp -= 1;
+        }
+    }   else {
+        printf("Program terminated: out of bound stack index.\n");
+        exit(1);
     }
 }
 
@@ -31,8 +46,16 @@ void print_stack(int stack[], unsigned int sp, unsigned int n){
  */
 
 void push(int const reg[], unsigned int *sp, int reg_number, int stack[]){
-    stack[*sp] = reg[reg_number];
-    *sp += 1;
+    if(reg_number >= 0 && reg_number < REG_SIZE && *sp < STACK_SIZE - 1){
+        stack[*sp] = reg[reg_number];
+        *sp += 1;
+    }   else if (*sp >= STACK_SIZE - 1){
+        printf("Program terminated: out of bound stack index.\n");
+        exit(1);
+    }   else {
+        printf("Program terminated: out of bound register index.\n");
+        exit(1);
+    }
 }
 
 
@@ -42,8 +65,16 @@ void push(int const reg[], unsigned int *sp, int reg_number, int stack[]){
  */
 
 void pop(int reg[], unsigned int *sp, int reg_number, int const stack[]){
-    *sp -= 1;
-    reg[reg_number] = stack[*sp];
+    if(reg_number >= 0 && reg_number < REG_SIZE && *sp > 0){
+        *sp -= 1;
+        reg[reg_number] = stack[*sp];
+    }   else if(*sp <= 0){
+        printf("Program terminated: out of bound stack index.\n");
+        exit(1);
+    }   else {
+        printf("Program terminated: out of bound register index.\n");
+        exit(1);
+    }
 }
 
 
@@ -52,7 +83,12 @@ void pop(int reg[], unsigned int *sp, int reg_number, int const stack[]){
  */
 
 void mov(int reg[], int reg_number, int value){
-    reg[reg_number] = value;
+    if(reg_number >= 0 && reg_number < REG_SIZE){
+        reg[reg_number] = value;
+    }   else {
+        printf("Program terminated: out of bound register index.\n");
+        exit(1);
+    }
 }
 
 
@@ -62,10 +98,18 @@ void mov(int reg[], int reg_number, int value){
  * after returning from the function.
  */
 
-unsigned int call(unsigned int ip, int new_position, unsigned int *sp, int stack[]){
-    stack[*sp] = ip + 2;
-    *sp += 1;
-    return new_position;
+unsigned int call(unsigned int ip, int new_position, unsigned int *sp, int stack[], unsigned int array_size){
+    if(ip < array_size - 2 && *sp < STACK_SIZE - 1){
+        stack[*sp] = ip + 2;
+        *sp += 1;
+        return new_position;
+    }   else if (*sp >= STACK_SIZE - 1){
+        printf("Program terminated: out of bound stack index.\n");
+        exit(1);
+    }   else {
+        printf("Program terminated: out of bound instruction index.\n");
+        exit(1);
+    }
 }
 
 
@@ -75,8 +119,13 @@ unsigned int call(unsigned int ip, int new_position, unsigned int *sp, int stack
  */
 
 unsigned int ret(unsigned int *sp, int stack[]){
-    *sp -= 1;
-    return stack[*sp];
+    if(*sp > 0){
+        *sp -= 1;
+        return stack[*sp];
+    }   else {
+        printf("Program terminated: out of bound stack index.\n");
+        exit(1);
+    }
 }
 
 
@@ -84,58 +133,97 @@ unsigned int ret(unsigned int *sp, int stack[]){
  * jmp() returns the value of the  new position, which will be assigned to the instruction pointer after the function call.
  */
 
-unsigned int jmp(int new_position){
-    return (unsigned int)new_position;
+unsigned int jmp(int new_position, int array_size){
+    if(new_position >= 0 && new_position < array_size){
+        return (unsigned int)new_position;
+    }   else {
+        printf("Program terminated: out of bound stack index.\n");
+        exit(1);
+    }
 }
 
 
 /*
- * jz() checks if the last element to be inserted in the stack is equal to 0. If so, it assigns to the instruction pointer a new position
- * (which is passed to the function), otherwise it increments the instruction pointer by two positions (the instruction itself and its newPosition parameter).
+ * jz() checks if the last element inserted in the stack is equal to 0. If so, it assigns to the instruction pointer a new position
+ * (which is passed to the function), otherwise it increments the instruction pointer by two positions (skipping the instruction itself and its newPosition parameter).
  * In any case, it decrements the stack pointer by one position.
  */
 
-void jz(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
-    if(stack[*sp - 1] == 0){
-        *ip = newPosition;
+void jz(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition, unsigned int array_size){
+    if (newPosition >= 0 && newPosition < (int)array_size && *sp > 0){
+        if(stack[*sp - 1] == 0){
+            *ip = newPosition;
+        }   else if (*ip < array_size - 2){
+            *ip += 2;
+        }   else {
+            printf("Program terminated: out of bound instruction index.\n");
+            exit(1);
+        }
+
+        *sp -= 1;
+    }   else if (*sp <= 0){
+        printf("Program terminated: out of bound stack index.\n");
+        exit(1);
     }   else {
-        *ip += 2;
+        printf("Program terminated: out of bound instruction index.\n");
+        exit(1);
     }
-
-    *sp -= 1;
-}
-
-/*
- * jpos() checks if the last element to be inserted in the stack is greater than 0. If so, it assigns to the instruction pointer a new position
- * (which is passed to the function), otherwise it increments the instruction pointer by two positions (the instruction itself and its newPosition parameter).
- * In any case, it decrements the stack pointer by one position.
- */
-
-void jpos(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
-    if(stack[*sp - 1] > 0){
-        *ip = newPosition;
-    }   else {
-        *ip += 2;
-    }
-
-    *sp -= 1;
 }
 
 
 /*
- * jneg() checks if the last element to be inserted in the stack is less than 0. If so, it assigns to the instruction pointer a new position
- * (which is passed to the function), otherwise it increments the instruction pointer by two positions (the instruction itself and its newPosition parameter).
+ * jpos() checks if the last element inserted in the stack is greater than 0. If so, it assigns to the instruction pointer a new position
+ * (which is passed to the function), otherwise it increments the instruction pointer by two positions (skipping the instruction itself and its newPosition parameter).
  * In any case, it decrements the stack pointer by one position.
  */
 
-void jneg(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition){
-    if(stack[*sp - 1] < 0){
-        *ip = newPosition;
-    }   else {
-        *ip += 2;
-    }
+void jpos(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition, unsigned int array_size){
+    if (newPosition >= 0 && newPosition < (int)array_size && *sp > 0){
+        if(stack[*sp - 1] > 0){
+            *ip = newPosition;
+        }   else if (*ip < array_size - 2){
+            *ip += 2;
+        }   else {
+            printf("Program terminated: out of bound instruction index.\n");
+            exit(1);
+        }
 
-    *sp -= 1;
+        *sp -= 1;
+    }   else if (*sp <= 0){
+        printf("Program terminated: out of bound stack index.\n");
+        exit(1);
+    }   else {
+        printf("Program terminated: out of bound instruction index.\n");
+        exit(1);
+    }
+}
+
+
+/*
+ * jneg() checks if the last element inserted in the stack is less than 0. If so, it assigns to the instruction pointer a new position
+ * (which is passed to the function), otherwise it increments the instruction pointer by two positions (skipping the instruction itself and its newPosition parameter).
+ * In any case, it decrements the stack pointer by one position.
+ */
+
+void jneg(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition, unsigned int array_size){
+    if (newPosition >= 0 && newPosition < (int)array_size && *sp > 0){
+        if(stack[*sp - 1] < 0){
+            *ip = newPosition;
+        }   else if (*ip < array_size - 2){
+            *ip += 2;
+        }   else {
+            printf("Program terminated: out of bound instruction index.\n");
+            exit(1);
+        }
+
+        *sp -= 1;
+    }   else if (*sp <= 0){
+        printf("Program terminated: out of bound stack index.\n");
+        exit(1);
+    }   else {
+        printf("Program terminated: out of bound instruction index.\n");
+        exit(1);
+    }
 }
 
 
@@ -145,15 +233,22 @@ void jneg(unsigned int *ip, unsigned int *sp, int const stack[], int newPosition
  */
 
 void add(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
-
-    long result = 0;
-    result = (long)reg[reg1] + (long)reg[reg2];
-    if (result > INT_MAX || result < INT_MIN){
-        printf("Program termination due to overflow in ADD.\n");
-        exit(1);
+    if (reg1 >= 0 && reg2 >= 0 && reg1 < REG_SIZE && reg2 < REG_SIZE){
+        long result = 0;
+        result = (long)reg[reg1] + (long)reg[reg2];
+        if (result > INT_MAX || result < INT_MIN){
+            printf("Program termination due to overflow in ADD.\n");
+            exit(1);
+        }   else if (*sp < STACK_SIZE - 1){
+            stack[*sp] = (int)result;
+            *sp += 1;
+        }   else {
+            printf("Program terminated: out of bound stack index.\n");
+            exit(1);
+        }
     }   else {
-        stack[*sp] = (int)result;
-        *sp += 1;
+        printf("Program terminated: out of bound register index.\n");
+        exit(1);
     }
 }
 
@@ -166,15 +261,22 @@ void add(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
  */
 
 void sub(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
-
-    long result = 0;
-    result = (long)reg[reg1] - (long)reg[reg2];
-    if (result > INT_MAX || result < INT_MIN){
-        printf("Program termination due to overflow in SUB.\n");
-        exit(1);
+    if(reg1 >= 0 && reg2 >= 0 && reg1 < REG_SIZE && reg2 < REG_SIZE){
+        long result = 0;
+        result = (long)reg[reg1] - (long)reg[reg2];
+        if (result > INT_MAX || result < INT_MIN){
+            printf("Program termination due to overflow in SUB.\n");
+            exit(1);
+        }   else if(*sp < STACK_SIZE - 1){
+            stack[*sp] = (int)result;
+            *sp += 1;
+        }   else {
+            printf("Program terminated: out of bound stack index.\n");
+            exit(1);
+        }
     }   else {
-        stack[*sp] = (int)result;
-        *sp += 1;
+        printf("Program terminated: out of bound register index.\n");
+        exit(1);
     }
 }
 
@@ -187,16 +289,23 @@ void sub(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
  */
 
 void mul(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
+    if(reg1 >= 0 && reg2 >= 0 && reg1 < REG_SIZE && reg2 < REG_SIZE){
+        long result = 0;
+        result = (long)reg[reg1] * (long)reg[reg2];
 
-    long result = 0;
-    result = (long)reg[reg1] * (long)reg[reg2];
-
-    if (result > INT_MAX || result < INT_MIN){
-        printf("Program termination due to overflow in MUL.\n");
-        exit(1);
+        if (result > INT_MAX || result < INT_MIN){
+            printf("Program termination due to overflow in MUL.\n");
+            exit(1);
+        }   else if (*sp < STACK_SIZE - 1){
+            stack[*sp] = (int)result;
+            *sp += 1;
+        }   else {
+            printf("Program terminated: out of bound stack index.\n");
+            exit(1);
+        }
     }   else {
-        stack[*sp] = (int)result;
-        *sp += 1;
+        printf("Program terminated: out of bound register index.\n");
+        exit(1);
     }
 }
 
@@ -204,9 +313,9 @@ void mul(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
 /*
  * divi() takes the content of the reg1 and reg2 registers, divides the content of the register reg1 by reg2,
  * stores the result of the operation in the stack and increases the stack pointer by one position.
- * However, it only does so if the division doesn't produce any overflow or underflow,
+ * However, it only does so if the division doesn't produce any overflow,
  * in which case it prints a message relative to the error then quits the program. This behaviour only occurs
- * if the dividend is equal to INT_MAX and the divisor is equal to -1: when dividing two numbers greater than 1 (which is
+ * if the dividend is equal to INT_MAX and the divisor is equal to -1: when dividing two numbers with no decimal value(which is
  * our case since an int can't have values between 0 and 1) the result will surely have a smaller absolute value than the dividend.
  * The only instance in which an overflow may occur is when the dividend takes the value of INT_MIN (which is -2147483648) and
  * the divisor is -1: this would lead to the result of +2147483648, which is equal to INT_MAX (+2147483647) plus 1, therefore out of the upper integer bound.
@@ -214,17 +323,24 @@ void mul(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
  */
 
 void divi(int const reg[], int reg1, int reg2, unsigned int *sp, int stack[]){
-    if(reg[reg2] != 0){
-        if(reg[reg1] == INT_MIN && reg[reg2] == -1){
-            printf("Program termination due to overflow in DIV.\n");
-            exit(1);
+    if(reg1 >= 0 && reg2 >= 0 && reg1 < REG_SIZE && reg2 < REG_SIZE){
+        if(reg[reg2] != 0){
+            if(reg[reg1] == INT_MIN && reg[reg2] == -1){
+                printf("Program termination due to overflow in DIV.\n");
+                exit(1);
+            }   else if (*sp < STACK_SIZE - 1){
+                stack[*sp] = reg[reg1] / reg[reg2];
+                *sp += 1;
+            }   else {
+                printf("Program terminated: out of bound stack index.\n");
+                exit(1);
+            }
         }   else {
-            stack[*sp] = reg[reg1] / reg[reg2];
-            *sp += 1;
+            printf("Error: Division by zero.\n");
+            exit(1);
         }
-
     }   else {
-        printf("Error: Division by zero.\n");
+        printf("Program terminated: out of bound register index.\n");
         exit(1);
     }
 }
@@ -264,22 +380,22 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
                 ip += 3;
                 break;
             case CALL:
-                ip = call(ip, instruction_array[ip+1], &sp, stack);
+                ip = call(ip, instruction_array[ip+1], &sp, stack, array_size);
                 break;
             case RET:
                 ip = ret(&sp, stack);
                 break;
             case JMP:
-                ip = jmp(instruction_array[ip + 1]);
+                ip = jmp(instruction_array[ip + 1], array_size);
                 break;
             case JZ:
-                jz(&ip, &sp, stack, instruction_array[ip+1]);
+                jz(&ip, &sp, stack, instruction_array[ip+1], array_size);
                 break;
             case JPOS:
-                jpos(&ip, &sp, stack, instruction_array[ip+1]);
+                jpos(&ip, &sp, stack, instruction_array[ip+1], array_size);
                 break;
             case JNEG:
-                jneg(&ip, &sp, stack, instruction_array[ip+1]);
+                jneg(&ip, &sp, stack, instruction_array[ip+1], array_size);
                 break;
             case ADD:
                 add(reg, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
@@ -297,6 +413,9 @@ void exeFunctions(int instruction_array[], unsigned int array_size, unsigned int
                 divi(reg, instruction_array[ip+1], instruction_array[ip+2], &sp, stack);
                 ip += 3;
                 break;
+            default:
+                printf("Command not found.\n");
+                exit(1);
         }
     }
 }

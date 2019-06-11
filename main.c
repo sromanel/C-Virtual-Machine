@@ -17,15 +17,15 @@
 
 int main(int argc, char *argv[]) {
 
-    char *command;
-    char *filename;
+    char *command = NULL;
+    char *filename = NULL;
 
     command = argv[1];
     filename = argv[2];
 
-    if((strcasecmp(command, "print") == 0) || (strcasecmp(command, "stampa") == 0)){
+    if(strcasecmp(command, "print") == 0){
         print(filename);
-    }   else if ((strcasecmp(command, "execute") == 0) || (strcasecmp(command, "esegui") == 0)){
+    }   else if (strcasecmp(command, "execute") == 0){
         execute(filename);
     }   else {
         printf("Wrong instruction.\n");

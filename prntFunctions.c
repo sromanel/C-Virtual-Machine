@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "CVM.h"
 
 /*
@@ -78,6 +79,9 @@ void prntFunction(int instruction_array[], int length){
                 printf("[%3d] DIV R%d R%d\n", i, instruction_array[i+1], instruction_array[i+2]);
                 i += 3;
                 break;
+            default:
+                printf("Command not found.\n");
+                exit(1);
         }
     }
 }

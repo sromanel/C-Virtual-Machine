@@ -1,4 +1,7 @@
-14
+;the main focus of this program is to check the behaviour of this VM
+;while dealing with overflowing operands in different arithmetic operations
+;the first operand is defined in R0, the second in R1 and the operation itself in line 6 (30 = ADD, 31 = SUB, 32 = MUL, 33 = DIV)
+14           ;number of lines
 12           ;[ 0]    MOV R0 2147483647
 0            ;[ 1]
 2147483647   ;[ 2]

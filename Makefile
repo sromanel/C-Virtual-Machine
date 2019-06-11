@@ -1,13 +1,13 @@
 objects = main.o toArray.o execute.o exeFunctions.o print.o prntFunctions.o
-eseguibile = VM
+executable = VM
 cflags = -g3 -fsanitize=address -fsanitize=undefined -std=gnu89 -pedantic-errors -Wall -Wextra
 libs = -lm
 
-$(eseguibile) : $(objects)
-	gcc $(cflags) -o $(eseguibile) $(objects) $(libs)
+$(executable) : $(objects)
+	gcc $(cflags) -o $(executable) $(objects) $(libs)
 
 clean:
-	rm $(eseguibile)  $(objects)
+	rm $(executable)  $(objects)
 
 .c.o :
 	gcc -c $(cflags) $<
